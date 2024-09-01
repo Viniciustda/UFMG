@@ -1,0 +1,2 @@
+Use as teclas A e D para movimentar o canhão.
+Use a tecla ESPAÇO para atirar.
