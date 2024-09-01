@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangulação e Vertex color</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            padding-bottom: 10px;
+        }
+        pre {
+            background-color: #282c34;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+        }
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .line{
+            border-bottom: 2px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <p style="text-align: center; font-size: 20px;">Universidade Federal de Minas Gerais (UFMG)</p>
+            <p style="text-align: center; font-size: 20px;">Algoritmos 2 - DCC207</p>
+            <p style="text-align: center; font-size: 20px;">Trabalho Prático 1</p>
+            <p style="text-align: center;">Geometria Computacional</p>
+            <p style="text-align: center;">Problema da Galeria de Arte</p>
+        </h1>
+
+
+        <div id="text-content">
+            <p style="text-align: center;"><b>Alunos:</b></p>
+            
+            <p style="text-align: center;">Gustavo Ferreira Dias</p>
+            <p style="text-align: center;">Vinicius Trindade Dias Abel</p>
+    </div>
+
+    <div class="container">
+        <div id="text-content">
+            <p style="text-align: center; font-size: 20px;"><b>1. Introdução</b></p>
+        	<p>O problema proposto foi implementar um algoritmo para triangular um polígono, usando o método do corte de orelhas e computar o limite inferior de câmeras para vigiá-lo usando o algoritmo da coloração de vértices em um grafo. O programa deve permitir que o usuário possa interagir e analisar passo-a-passo o algoritmo, destacando as faces que já foram exploradas, ou a face que está sendo avaliada em cada iteração utilizando a biblioteca Plotly.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="text-content">
+
+            <p style="text-align: center; font-size: 20px;"><b>2. Método</b></p>
+            <p style="text-align: center; font-size: 15px;"><b>2.1. Ambiente de Execução</b></p>
+            
+            <p>O algoritmo foi criado e executado na linguagem de programação Python 3, no sistema operacional Ubuntu 24.04 LTS. A única biblioteca terceira utilizada foi a Plotly em Python, como requisito da especificação do problema. A biblioteca sys, nativa da linguagem python também foi usada para leitura de passagem de parâmetros.</p>
+            <p>É necessário também um navegador que suporte páginas HTML e a execução de códigos em javascript para a visualização dos dados no fim da execução.</p>
+            <p>Para executar: </p>
+            <p>Por parâmetro - python3 main.py {caminho do arquivo de entrada} </p>
+            <p>ou </p>
+            <p>Por input - python3 main.py < {caminho do arquivo de entrada}</p>
+            
+            <p style="text-align: center; font-size: 15px;"><b>2.2. Estrutura de Dados</b></p>
+
+            <p>A implementação do programa teve como base 2 estruturas de dados, um polígono, representado como uma lista de tuplas, de um grafo, representado por uma matriz de adjacência. A entrada de dados do polígono é padronizada do tipo: Todo polígono é fechado e simples e os pontos estão ordenados em ordem anti-horária. Exemplos de polígonos usados nesse algoritmo podem ser encontrados em: <a href="https://www.ic.unicamp.br/~cid/Problem-instances/Art-Gallery/AGPVG/index.html">https://www.ic.unicamp.br/~cid/Problem-instances/Art-Gallery/AGPVG/index.html</a>.</p>
+            <p>O polígono, depois de lido e tratado, consiste em uma lista de tuplas na qual cada tupla possui as coordenadas x e y de cada ponto. Com a entrada padronizada, cada ponto se conecta com seu adjacente na lista, seja um polígono com 3 pontos, [ponto1, ponto2, ponto3], o ponto1 é conectado ao ponto2, o ponto2 ao ponto3 e o ponto3 ao ponto1. Em relação ao grafo, os vértices correspondem aos pontos do polígono e as arestas representam as conexões entre esses pontos, juntamente com as conexões encontradas depois da triangulação.            </p>
+            <p>Para solucionar o problema, foram utilizados os seguintes algoritmos e estruturas:</p>
+            <p>Triangulação por Corte de Orelhas:</p>
+            <p>Este método consiste em iterativamente remover "orelhas" do polígono até que reste um único triângulo. Uma orelha é definida como um vértice do polígono que, junto com seus dois vizinhos, forma um triângulo convexo.</p>
+            <p>A lista de vértices do polígono é manipulada diretamente para remover os vértices das orelhas encontradas, formando os triângulos.</p>
+            <p>Coloração de Vértices:</p>
+            <p>Utilizamos um algoritmo de coloração de vértices para garantir que dois vértices conectados não tenham a mesma cor. No caso do polígono triangulado, a solução sempre poderá ser encontrada com no mínimo 3 cores diferentes, mas para a visualização da cor de cada vértice é necessário a execução da coloração de vértices.</p>
+            <p>A coloração foi realizada em um grafo gerado a partir dos vértices do polígono e dos triângulos resultantes da triangulação. Cada vértice do polígono foi colorido de forma que não compartilhe a mesma cor com seus vértices adjacentes.</p>
+            <p>Visualização:</p>
+            <p>A visualização da triangulação e da coloração dos vértices é feita utilizando a biblioteca Plotly em Python. O processo é realizado em etapas, permitindo uma visualização clara de cada passo da triangulação e da coloração.</p>
+            <p>A visualização é feita por meio de gráficos interativos, onde cada etapa da triangulação e da coloração é apresentada em um gráfico, permitindo ao usuário visualizar o progresso do algoritmo.</p>
+            <p></p>
+
+        </div>
+    </div>
+
+    <div id="text-content" class="container">
+        <p style="text-align: center; font-size: 15px;"><b>2.3. Funções</b></p>
+
+        <p style="text-align: center; font-size: 14px;"><b>readPolygon()</b></p>
+        <pre><code class="language-python">
+def readPolygon():
+
+    filename = ''
+
+    if len(sys.argv) < 2: 
+        print("Parâmetro não encontrado. Insira o caminho do arquivo:")
+        filename = input()
+    else:
+        filename = sys.argv[1]
+
+    with open(filename, 'r') as file:
+        data = file.read().strip().split()
+
+    n_vertices = int(data[0])
+
+    coordenadas = [(float(int(data[i].split('/')[0])/int(data[i].split('/')[1])),float(int(data[i+1].split('/')[0])/int(data[i+1].split('/')[1]))) for i in range(1, n_vertices*2+1,2)]
+    return coordenadas
+        </code></pre>
+
+        <p>A primeira função a ser executada é a de leitura do arquivo <b>readPolygon()</b>, ela primeiro verifica se foi passado um caminho de arquivo por parâmetro, caso não, ela pede que seja inserido o caminho do arquivo. Em seguida ela lê o arquivo e trata seus dados de acordo com a padronização. Seu retorno é uma lista de tuplas, na qual cada tupla representa as coordenadas X e Y de cada vértice do polígono.</p>
+        <p>O polígono no arquivo .pol disponível no link da unicamp ou nos arquivos de entrada do repositório no github são da seguinte forma:</p>
+
+        <div style="color:rgb(52, 116, 151)">
+            <p>"Cada arquivo consiste em uma linha dividida em duas partes. A primeira parte é um valor inteiro que representa o número de vértices do polígono.</p>
+            <p> A segunda parte é uma sequência de vértices no sentido anti-horário. Cada vértice é representado por suas coordenadas x e y, cada uma das quais é escrita como o quociente de dois inteiros int/int.</p>
+            
+            <p>Como exemplo, aqui está a representação de um quadrado com coordenadas (1, 1) (50, 1) (50, 50) e (1, 50):</p>
+            <p>4 1/1 1/1 100/2 1/1 500/10 50/1 1/1 100/2"</p>
+        </div>
+
+        <div class="container">
+            <h2>Plot do Polígono de Exemplo</h2>
+            <iframe src="exemplo1/poligono.html" title="Exemplo1-Poligono"></iframe>
+        </div>
+
+    </div>
+
+
+
+    <div id="text-content" class="container">
+
+        <p style="text-align: center; font-size: 14px;"><b>earClippingTriangulation(polygon)</b></p>
+        
+        <pre><code class="language-python">
+def earClippingTriangulation(polygon):
+    # Função para verificar se dados 3 pontos eles formam um triângulo convexo
+    def isConvex(p1, p2, p3):
+        return (p3[1] - p1[1]) * (p2[0] - p1[0]) - (p3[0] - p1[0]) * (p2[1] - p1[1]) > 0
+
+    # Função para verificar se um ponto está dentro de um triângulo
+    def inTriangle(pt, v1, v2, v3):
+        b1 = not isConvex(pt,v1, v2)
+        b2 = not isConvex(pt,v2, v3)
+        b3 = not isConvex(pt,v3, v1)
+        return ((b1 == b2) and (b2 == b3))
+
+    triangles = []
+    global triangulos_plot
+    vertices = polygon[:]
+    
+    while len(vertices) > 3:
+        for i in range(len(vertices)):
+            p1 = vertices[i]
+            p2 = vertices[i + 1]
+            p3 = vertices[i + 2]
+            
+            #se os 3 pontos analisados formam um triangulo convexo
+            if isConvex(p1, p2, p3):
+                ear = True
+                #para cada j, se ele não faz parte/está dentro do triângulo, vertice i+1 não é orelha
+                for j in vertices:
+                    if not (j in (p1,p2,p3)) and inTriangle(j, p1, p2, p3):
+                        ear = False
+                        triangulos_plot.append((p1, p2, p3))
+                        break
+                
+                if ear:
+                    triangles.append((p1, p2, p3))
+                    triangulos_plot.append((p1, p2, p3))
+                    del vertices[i + 1]
+                    break
+    
+    #faz ultimo triangulo
+    triangles.append((vertices[0], vertices[1], vertices[2]))
+    triangulos_plot.append((vertices[0], vertices[1], vertices[2]))
+    return triangles
+        </code></pre>
+
+
+        <p>A função a seguir é a <b>earClippingTriangulation()</b>, que realiza a triangulação de um polígono usando o método de corte de orelhas e retorna uma lista de tuplas de triângulos. A função só funciona com uma entrada de polígono fechado e em ordem anti-horária. Polígonos de entrada diferentes dessas condições geram triangulações erradas.</p>
+        <p>A função funciona da seguinte forma: Uma orelha de um polígono é o triângulo formado pelos vértices consecutivos u, v, w, tal que uw é uma diagonal. Nesse caso, v é chamado de ponta da orelha. O algoritmo inicia verificando quais vértices formam orelhas (quais são pontas de orelhas), para isso ele chama a função <b>isConvex(), O(1)</b> para os pontos vertices[i], vertices[i+1], vertices[i+2]. A função isConvex verifica se o produto vetorial entre os vetores que formam o triângulo, dado os 3 vértices que o compõem, é maior que 0, se sim, significa que o triângulo é convexo, se não, não é convexo. Caso os 3 pontos não formem um triângulo convexo, é passado para os próximos pontos da lista. </p>
+        <p>Caso os vértices formem um triângulo convexo, é testado para cada outro ponto do polígono, se ele faz parte do triângulo ou se ele está dentro do triângulo. Para verificar se um ponto está dentro do triângulo é usado a função <b>inTriangle(), O(1)</b>, que, dado 1 ponto e 3 pontos que formam um triângulo, é chamado a função isConvex entre o ponto e cada aresta do triângulo. Este passo onde algum outro ponto do polígono está dentro do triângulo é demonstrado no gráfico com uma linha pontilhada vermelha.</p>
+        <p>Se nenhum outro ponto do polígono está nessas condições significa que o vertices[i+1] = v, ou seja, o triângulo é uma orelha e v é sua ponta. Com isso agora basta retirar ele da lista de vértices a serem computados na próxima iteração. Esse processo tem custo O(n) para cada vértice, logo custo total, no pior caso <b>O(n²)</b>.</p>
+        <p>A função retorna uma lista de tuplas de tuplas, na qual cada tupla da lista possui 3 tuplas e cada uma dessas tuplas possuem 2 valores, X e Y que correspondem aos vértices que formam o triângulo.
+        <p>Exemplo: [((p1t1x,p1t1y),(p2t1x,p2t1y),(p3t1x,p3t1y)),((p1t2x,p1t2y),(p2t2x,p2t2y),(p3t2x,p3t2y)),((p1t3x,p1t3y),(p2t3x,p2t3y),(p3t3x,p3t3y))]</p>
+        <p>OBS: A variável global triangulos_plot armazena todas as triangulações, inclusive os passos onde o triângulo não forma uma orelha, para efeitos de visualização.</p>
+        
+        <div class="container">
+            <h2>Triangulação</h2>
+            <p>Deslize o círculo na barra inferior para ver passo a passo</p>
+            <p style="color:blue">Linha Azul = Orelha Encontrada e Triangulo formado</p>
+            <p style="color:red">Linha Vermelha = Existe algum ponto do polígono que está dentro do triângulo</p>
+            <iframe src="exemplo1/triangulacao.html" title="Exemplo1-Triangulação"></iframe>
+        </div>
+    
+    </div>
+
+    <div id="text-content" class="container">
+
+        <p style="text-align: center; font-size: 14px;"><b>Grafo</b></p>
+
+        <pre><code class="language-python">
+class Grafo:
+    def __init__(self, vertices):
+        self.vertices = vertices
+        self.grafo = [[0 for _ in range(vertices)] for _ in range (vertices)]
+
+    def connectVertices(self, a, b):
+        self.grafo[a][b] = 1
+        self.grafo[b][a] = 1
+    
+    #checa se alguem conectado a v tem a mesma cor
+    def conectadoComMesmaCor(self, vertice, array_cores, cor):
+        for i in range(self.vertices):
+            if self.grafo[i][vertice] == 1 and array_cores[i] == cor:
+                return False
+        return True
+
+    def vertexColor(self, quantidade_cores, array_cores, vertice_atual):        
+        if vertice_atual == self.vertices:
+            return True
+
+        for cor in range(1, quantidade_cores + 1):
+            if self.conectadoComMesmaCor(vertice_atual, array_cores, cor):
+                array_cores[vertice_atual] = cor
+                if self.vertexColor(quantidade_cores, array_cores, vertice_atual + 1):
+                    return True
+                array_cores[vertice_atual] = 0
+
+        return False
+        </code></pre>
+
+        <p style="text-align: center; font-size: 14px;"><b>vertexColorPolygon(polygon, triangles)</b></p>
+        
+        <pre><code class="language-python">
+def vertexColorPolygon(polygon, triangles):
+    #criando grafo, tamanho = vertices que compoem poligono
+    g = Grafo(len(polygon))
+
+    #traduzindo conexões
+    #polígono é fechado
+    #0 no 1, 1 no 2, 2 no 3, 3 no 4, 4 no 5,...
+    for i in range(len(polygon)-1):
+        g.connectVertices(i, i+1)
+    #ligação último no primeiro, n no 0
+    g.connectVertices(len(polygon)-1, 0)
+
+    #Transforma lista de tuplas em um dicionário,
+    # 0 : (coordx, coordy) , 1 : (coordx, coordy)...
+    dicionario_indice_vertices = {tupla_: i for i, tupla_ in enumerate(polygon)}
+
+    #triangulo tem 3 vertices
+    #transforma em conexão, v1->v2, v2->v3, v3->v1
+    conexoes = []
+
+    for triangle in triangles:
+        conexoes.append((triangle[0],triangle[1]))
+        conexoes.append((triangle[1],triangle[2]))
+        conexoes.append((triangle[2],triangle[0]))
+
+    for a,b in conexoes:
+        g.connectVertices(dicionario_indice_vertices.get(a),dicionario_indice_vertices.get(b))
+
+    #rodar vertex color no grafo
+    array_cores = [0] * len(polygon)
+    g.vertexColor(3,array_cores,0) #no escopo, array de cores é modificado, logo pode ser usado em seguida
+
+    vertex_colors = {}
+    #se vértice preto, coloração errada
+    cores = ['black', 'purple', 'yellow', 'green', 'black']
+
+    for i, vertex in enumerate(polygon):
+        vertex_colors[vertex] = cores[array_cores[i]]
+
+    return vertex_colors
+        </code></pre>
+
+        <p>A função <b>vertexColorPolygon()</b> é executada em seguida e recebe um polígono e sua triangulação como entrada, cria um grafo representando as conexões e realiza a coloração dos vértices.</p>
+        <p>Primeiro ela cria um grafo com a quantidade de vértices referente a quantidade de vértices do polígono, o grafo inicia uma matriz de adjacências de tamanho nxn para n a quantidade de vértices do polígono. Em seguida ela realiza as conexões básicas do polígono com a função <b>connectVertices()</b> (marca com 1 na matriz de adjacências caso o vértice que corresponde a linha se conecte com o vértice correspondente à coluna), essas conexões básicas representam o polígono inicial, onde o ponto1 conecta com o ponto2, ponto2 com ponto3 e em diante. Após isso é enumerado cada vértice e guardado em um dicionário, dando uma chave numérica para cada coordenada (x,y), essa chave representa um vértice no grafo. Em seguida é construído uma lista que guarda as conexões dos pontos dos triângulos e essa lista é executada para conectar os vértices correspondentes no grafo. Agora representamos o polígono triangulado em forma de grafo com todas as suas conexões. O custo dessa transformação no pior caso é de O(xn) para n a quantidade de vértices e x a quantidade máxima que que cada vértice tem de conexões. </p>
+        <p>Depois da transformação de polígono para grafo, executamos a função <b>vertexColor()</b> no grafo criado. Passamos o parâmetro 3 para a função porque sabemos que no polígono triangulado, é possível colorir seus vértices sem que haja 2 vértices conectados que possuam a mesma cor com somente 3 cores.(provar) A função vertexColor() testa todas as possibilidades de coloração de vértices até encontrar uma que satisfaça. O custo dessa função é <b>O(3^n)</b>, para n a quantidade de vértices, porque ele testa todas as combinações possíveis de coloração com 3 cores, (isso reduz o desempenho do código para polígonos com muitos vértices).  </p>
+        <p>A função retorna uma lista de 0 a n na qual cada posição representa 1 vértice na ordem e cada número, de 1 a 3, representa uma cor.</p>
+
+        <div class="container">
+            <h2>Coloração dos Vértices</h2>
+            <p>Deslize o círculo na barra inferior para ver passo a passo</p>
+            <iframe src="exemplo1/coloracao.html" title="Exemplo1-Triangulação"></iframe>
+        </div>
+
+    </div>
+
+
+    <div id="text-content" class="container">
+
+        <p style="text-align: center; font-size: 14px;"><b>plotCompleto(polygon, triangles, vertex_colors)</b></p>
+        
+        <pre><code class="language-python">
+def plotCompleto(polygon, triangles, vertex_colors):
+    global triangulos_plot
+    fig = go.Figure()
+    
+    x, y = zip(*polygon)
+    fig.add_trace(go.Scatter(visible=True, x=x + (x[0],), y=y + (y[0],), mode='lines', name='Polígono'))
+    
+    step_index = 1
+    x_cumulative = ()
+    y_cumulative = ()
+
+    for triangle in triangulos_plot:
+        tx, ty = zip(*triangle)
+
+        #se é um triangulo correto
+        if triangle in triangles:
+            x_cumulative += tx
+            y_cumulative += ty
+            fig.add_trace(go.Scatter(visible=False,
+                                    x=x + (x[0],) + x_cumulative + (tx[0],),
+                                    y=y + (y[0],) + y_cumulative + (ty[0],),
+                                    mode='lines', 
+                                    fill='none',
+                                    name='Triangulacao'+str(step_index),
+                                    showlegend=False))
+        else:
+            fig.add_trace(go.Scatter(visible=False,
+                                    x=x + (x[0],) + tx + (tx[0],),
+                                    y=y + (y[0],) + ty + (ty[0],),
+                                    mode='lines', 
+                                    fill='none',
+                                    line=dict(color='red',dash='dot'),
+                                    name='Algum vértice dentro do triângulo'+str(step_index)))
+            
+        step_index = step_index + 1
+
+    triangulacao_completa = step_index-1
+
+    for vertex, color in vertex_colors.items():
+        fig.add_trace(go.Scatter(visible=False,
+                                    x=[vertex[0]],
+                                    y=[vertex[1]],
+                                    mode='markers', 
+                                    marker=dict(color=color, size=20), 
+                                    name=color + str(step_index),
+                                    showlegend=False))
+        step_index = step_index + 1
+    
+    steps = []
+    for i in range(len(fig.data)):
+        step = dict(
+            method="update",
+            args=[{"visible": [False] * len(fig.data)},
+                {"title": "Passo: " + str(i)}],
+        )
+        step["args"][0]["visible"][i] = True
+
+        if i >= triangulacao_completa: #triangulação completa sempre visivel depois de terminar
+            step["args"][0]["visible"][triangulacao_completa] = True 
+            for j in range(triangulacao_completa+1,i): #deixa cada vértice colorido visível ao mesmo tempo
+                step["args"][0]["visible"][j] = True
+
+        steps.append(step)
+
+    sliders = [dict(
+        active=0,
+        currentvalue={"prefix": ""},
+        steps=steps
+    )]
+
+    fig.update_layout(title='Triangulação por Corte de Orelhas e Coloração dos vértices', 
+                        xaxis_title='X', 
+                        yaxis_title='Y',
+                        sliders=sliders)
+    
+    fig.show()
+
+#Plota somente o polígono
+def plotPolygon(polygon):
+    fig = go.Figure()
+    
+    x, y = zip(*polygon)
+    fig.add_trace(go.Scatter(visible=True, x=x + (x[0],), y=y + (y[0],), mode='lines', name='Polígono'))
+
+    fig.update_layout(title='Polígono', 
+                        xaxis_title='X', 
+                        yaxis_title='Y',)
+    
+    fig.show()
+        
+        </code></pre>
+
+        <p>Por fim temos a função <b>plotCompleto()</b> e suas derivadas. Essa função reune todos os dados encontrados nas funções anteriores e plota em um gráfico interativo com a biblioteca plotly. As outras funções com prefixo "plot" fazem a mesma coisa mas divide em partes, plotPolygon(): Cria somente o polígono; plotTriangulacao(): Cria somente os passos da triangulação; plotVertexColor(): Cria somente os passos da coloração de vértices.</p>
+        <p>Essa função utiliza ferramentas da biblioteca plotly e, a cada "frame" ela plota um polígono diferente. Cada frame é criado a partir das coordenadas e informações sobre os vértices passados como parâmetro da função.</p>
+        <p>Para os passos da triangulação, ela itera em todos os triangulos, incluindo os passos onde uma orelha não é encontrada, isso tem complexidade O(t), para t a quantidade de triangulos.</p>
+        <p>Para os passos da coloração de vértices, ela itera por cada vértice colorido e a cada 1 vértice a mais, ela itera por todos os coloridos anteriormente para plotar juntos no gráfico. A complexidade é O(n²) para n a quantidade de vértices no polígono.</p>
+        <div class="container">
+            <h2>Triangulação + Coloração dos Vértices</h2>
+            <p>Deslize o círculo na barra inferior para ver passo a passo</p>
+            <iframe src="exemplo1/completo.html" title="Exemplo1-Triangulação"></iframe>
+        </div>
+
+    </div>
+
+    <div id="text-content" class="container">
+
+        <p style="text-align: center; font-size: 14px;"><b>Resultado Final</b></p>
+        
+        <pre><code class="language-python">
+contagem = {'green': 0, 'purple': 0, 'yellow': 0}
+
+for cor in cores_dos_vertices.values():
+    if cor in contagem:
+        contagem[cor] = contagem[cor] + 1
+
+print("São necessários ", min(contagem.values()), " guardas para vigiar a galeria de arte.")
+        </code></pre>
+
+        <p>O resultado final é simplesmente a contagem da cor que aparece menos vezes na coloração do polígono, sendo essa cor representando os guardas necessários para vigiar todo o local sem pontos cegos.</p>
+        <p>No nosso exemplo, o número de guardas é 6.</p>
+
+
+    </div>
+
+    <div class="container">
+        <div id="text-content">
+            <p style="text-align: center; font-size: 20px;"><b>5. Conclusões</b></p>
+
+            <p>Este trabalho lidou com a triangulação e coloração de um polígono simples utilizando métodos de grafos. A abordagem utilizada para a resolução foi a Triangulação por Corte de Orelhas e a coloração dos vértices.</p>
+            <p>Por meio da resolução desse trabalho, foi possível praticar os conceitos relacionados à geometria computacional e algoritmos de grafos, especificamente técnicas de triangulação e coloração de grafos.</p>
+            <p>Durante a implementação da solução para o problema, surgiram desafios importantes a serem superados, como a correta triangulação de polígonos e a coloração dos vértices A inexperiência com a biblioteca Plotly foi um desafio adicional já que ela se trata de uma ferramenta com muitas opções diferentes e os requisitos exigem uma animação.</p>
+            <p>Para a coloração dos vértices, utilizamos o algoritmo de coloração de grafos, que, apesar de sua simplicidade, apresenta um alto custo para polígonos com muitos vértices. Esse algoritmo garante que nenhuma cor se repete em vértices adjacentes, utilizando um máximo de três cores devido às propriedades dos grafos triangulados.</p>
+            <p>A visualização dos resultados foi um passo essencial para verificar a correta implementação dos algoritmos. Utilizamos a biblioteca Plotly para criar uma animação que mostra o processo de triangulação e coloração passo a passo. Isso não apenas facilitou a verificação de erros, mas também proporcionou uma maneira intuitiva de entender o funcionamento dos algoritmos.</p>
+            <p>Por fim, a complexidade total do algoritmo é altamente custosa, sendo O(3^n) para n a quantidade de vértices, devido somente a coloração de vertices. Polígonos com mais de 400 vértices em um processador não industrial chega a demorar alguns minutos para ser processado.</p>        
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="text-content">
+            <p style="text-align: center; font-size: 20px;"><b>6. Bibliografia</b></p>
+
+            <p><b>GOODRICH, Michael T.; TAMASSIA, Roberto</b>. <b>Algorithms Design and Applications</b>. Hoboken: Wiley.</p>
+            <p><b>O'ROURKE, Joseph</b>. <b>Computational Geometry in C</b>. 2. ed. Cambridge: Cambridge University Press.</p>
+            <p><b>PLOTLY</b>. <b>Plotly Python Graphing Library</b>. Disponível em: https://plotly.com/python/. Acesso em: 07 jul. 2024.</p>
+            <p><b>UNIVERSIDADE ESTADUAL DE CAMPINAS</b>. <b>Problem Instances: Art Gallery Problems Variants and Generators</b>. Disponível em: https://www.ic.unicamp.br/~cid/Problem-instances/Art-Gallery/AGPVG/index.html. Acesso em: 07 jul. 2024.</p>
+        </div>
+    </div>
+
+
+    
+
+    
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        });
+    </script>
+</body>
+</html>
