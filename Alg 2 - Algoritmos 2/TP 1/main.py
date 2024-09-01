@@ -43,7 +43,7 @@ def readPolygon():
 def earClippingTriangulation(polygon):
     # Função para verificar se dados 3 pontos eles formam um triângulo convexo
     def isConvex(p1, p2, p3):
-        return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0]) > 0
+        return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0]) >= 0
 
     # Função para verificar se um ponto está dentro de um triângulo
     def inTriangle(pt, v1, v2, v3):
