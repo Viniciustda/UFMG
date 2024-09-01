@@ -1,0 +1,11 @@
+# Espiral Quadrada e Espiral Triangular
+
+## Um número inteiro n ≥ 0, fornecido através da entrada padrão, representa um ponto da espiral quadrada ou da espiral triangular. Assumindo que esse número inteiro é válido, ou seja, n ≥ 0, a saída padrão fornece as coordenadas (x, y) desse ponto.
+
+### Ambiente computacional para executar o TP:
+
+    Sistema operacional: Windows 10 Home Single Language
+
+    Tipo de sistema: Sistema Operacinal de 64 bits, processador com base  em x64
+
+    Compilador utilizado: GCC
