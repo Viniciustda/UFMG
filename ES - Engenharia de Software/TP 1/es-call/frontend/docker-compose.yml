@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  es-call-frontend:
+    build: ./frontend
+    restart: always
+    container_name: es-call-frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./frontend:/usr/es-call-frontend"

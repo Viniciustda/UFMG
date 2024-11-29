@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>es-call Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 100vh;
+    }
+    
+    .botao {
+    width: 50%;
+    height: 20vh;
+    margin: 20px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 24px;
+    color: #fff;
+    background-color: #3498db;
+    transition: background-color 0.3s ease;
+    }
+    
+    .botao:hover {
+    background-color: #2980b9;
+    }
+    
+    #botao-1 {
+    background-color: #e74c3c;
+    }
+    
+    #botao-1:hover {
+    background-color: #c0392b;
+    }
+    
+    #botao-2 {
+    background-color: #2ecc71;
+    }
+    
+    #botao-2:hover {
+    background-color: #29b260;
+    }
+    
+    #botao-3 {
+    background-color: #9b59b6;
+    }
+    
+    #botao-3:hover {
+    background-color: #8e44ad;
+    }
+</style>
+<body>
+    <header>
+        <h1>es-call Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <a href="gestor/index.html" class="botao" id="botao-1">Gestor</a>
+        <a href="tecnico/index.html" class="botao" id="botao-2">Técnico</a>
+        <a href="cliente/index.html" class="botao" id="botao-3">Cliente</a>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html> 

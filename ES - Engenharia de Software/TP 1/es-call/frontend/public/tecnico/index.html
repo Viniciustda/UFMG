@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abrir Chamado</title>
+    <link rel="stylesheet" href="http://localhost:8080/tecnico/style.css">
+</head>
+<body>
+
+    <button class="back-button" onclick="window.history.back();">
+        &#8592;
+    </button>
+
+    <div class="sidebar">
+        <div class="profile">
+            <img src="https://img.freepik.com/premium-photo/man-with-shirt-that-says-im-lot-calculator_1221953-49269.jpg?w=826" alt="Foto de Perfil" class="profile-pic">
+            <h3 style="font-size: 40px;">Técnico</h3>
+            <p></p>
+        </div>
+        
+        <ul class="menu" >
+            <li><div class="menu-task">Insira seu ID</div></li>
+            <li>
+                <input id="technicianId" placeholder="00" onchange="loadCalls();" style="height: 80px;"></input>
+                <button type="submit" class="menu-task" onclick="loadCalls();">Ver Chamados</button>
+            </li>
+
+            
+            <li><div href="#"></div></li>
+        </ul>
+
+        <div class="logo"> Es-Call </div>
+    </div>
+
+    <div id="opened-calls" class="call-list">
+        <h2>Chamados Abertos</h2>
+        <table id="technicianTickets">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Prioridade</th>
+                    <th>Data de Criação</th>
+                    <th>Data de Alocação</th>
+                    <th>Finalizar/Cancelar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dados dos chamados serão carregados aqui via JS -->
+            </tbody>
+        </table>
+        
+    </div>
+
+
+    <script src="http://localhost:8080/scripts.js"></script>
+
+    <script>
+
+        document.getElementById("technicianId").addEventListener('propertychange', loadCalls());
+
+        // Status Dropdown
+        function dropdownStatus(id) {
+            document.getElementById("dropdownId"+id).classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+                }
+            }
+        } 
+
+        async function setFinishCancel(id, status){
+
+            let data = {
+                callId: id
+            };
+
+            let apiLink = "";
+
+            if(status == "finish"){
+                apiLink = "http://localhost:3000/call/finish";
+            }
+            else if(status == "cancel"){
+                apiLink = "http://localhost:3000/call/cancel";
+            }
+
+            try {
+                const response = await fetch(apiLink, {
+                    method: 'PUT',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                console.log(result);
+                location.reload();
+
+                } 
+
+                catch (error) {
+                console.error('Error:', error);
+                location.reload();
+            }
+
+            }
+
+        // Function to load calls
+        async function loadCalls() {
+            
+            //clean table
+            document.querySelector("#technicianTickets tbody").innerHTML = "";
+
+            data = await (await fetch('http://localhost:3000/call/support-technician/'+document.getElementById('technicianId').value)).json();
+
+            data.forEach(call => {
+                
+                // Create a new row
+                const row = document.createElement("tr");
+
+                var priorityDisplay = "N/D";
+
+                if(call.priority == "HIGH"){
+                    priorityDisplay = "Alta";
+                }
+                if(call.priority == "MEDIUM"){
+                    priorityDisplay = "Média";
+                }
+                if(call.priority == "LOW"){
+                    priorityDisplay = "Baixa";
+                }
+                
+                // Date Format - Creation
+                let creationDate = new Date(call.createdAt);
+                let formattedCreationDateTime = creationDate.toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: false
+                });
+
+                // Date Format - Alocation
+                let alocationDate = new Date(call.technicianAddedDate);
+                let formattedAlocationDateTime = alocationDate.toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: false
+                });
+
+                if (call.status == "WAITING"){
+                    formattedAlocationDateTime = "N/A";
+                }
+
+                var finishDropdown =`
+                    <div class="dropdown">
+                        <button onclick="dropdownStatus(${call.id})" class="dropbtn">${call.status}</button>
+                        <div id="dropdownId${call.id}" class="dropdown-content">
+                            <a href="#" onclick="setFinishCancel(${call.id}, 'finish')">Finalizar Chamado</a>
+                            <a href="#" onclick="setFinishCancel(${call.id}, 'cancel')">Cancelar Chamado</a>
+                        </div>
+                    </div> 
+                `
+
+                // Create cells for each column
+                row.innerHTML = `
+                    <td>${call.id}</td>
+                    <td>${call.name}</td>
+                    <td>${call.description}</td>
+                    <td>${priorityDisplay}</td>
+                    <td>${formattedCreationDateTime}</td>
+                    <td>${formattedAlocationDateTime}</td>
+                    <td>${finishDropdown}</td>
+                `;
+
+                // Append the row to the specific table body
+                document.querySelector("#technicianTickets tbody").appendChild(row);
+                
+
+
+            });
+        }
+
+    </script>
+
+</body>
+</html>

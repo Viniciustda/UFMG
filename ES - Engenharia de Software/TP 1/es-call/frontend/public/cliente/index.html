@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abrir Chamado</title>
+    <link rel="stylesheet" href="http://localhost:8080/cliente/style.css">
+</head>
+<body>
+
+    <button class="back-button" onclick="window.history.back();">
+        &#8592;
+    </button>
+    
+    <div class="sidebar">
+        <div class="profile">
+            <img src="https://img.freepik.com/premium-photo/man-with-shirt-that-says-im-lot-calculator_1221953-49269.jpg?w=826" alt="Foto de Perfil" class="profile-pic">
+            <h3 style="font-size: 40px;">Cliente</h3>
+            <p></p>
+        </div>
+        <ul class="menu" >
+            <li><div class="new-task" onclick="show('form-container')">+ Abrir Novo Chamado</div></li>
+            
+            <li><div href="#"></div></li>
+        </ul>
+
+        <div class="logo"> Es-Call </div>
+    </div>
+
+    <div id="form-container" class="form-container">
+        <h2>Abrir Novo Chamado</h2>
+        <form id="openTicketForm">
+            <label for="description" style="height: 15px;">Informações sobre o chamado:</label>
+            <textarea id="name" placeholder="Seu Nome" required style="height: 50px;"></textarea>
+            <textarea id="phone" placeholder="Telefone para contato" required style="height: 50px;"></textarea>
+            <textarea id="description" placeholder="Descrição do problema" required style="height: 300px;"></textarea>
+            <button type="submit" style="font-size: 50px;">Abrir Chamado</button>
+        </form>
+    </div>
+
+    <script src="http://localhost:8080/scripts.js"></script>
+
+    <script>
+
+        function show(element){
+            document.getElementById("form-container").classList.add("hidden");
+            
+            document.getElementById(element).classList.remove("hidden");
+        }
+
+
+        // Transform content of form into json
+        document.getElementById("openTicketForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Collect the form data
+            const formData = {
+                name: document.getElementById("name").value,
+                phoneNumber: document.getElementById("phone").value,
+                description: document.getElementById("description").value
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/call/", {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                console.log(result);
+                
+                document.getElementById("form-container").innerHTML = `<h2 style="font-size: 80px;">Chamado aberto com sucesso!.</h2><h2 style="font-size: 80px;">Aguarde e entraremos em contato caso necessário.</h2>`
+
+                } 
+            
+                catch (error) {
+                console.error('Error:', error);
+                document.getElementById("form-container").innerHTML = `<h2 style="font-size: 50px;">Chamado aberto com sucesso.</h2><h2 style="font-size: 50px;">Aguarde e entraremos em contato caso necessário.</h2>`
+
+            }
+        });
+
+
+    </script>
+
+</body>
+</html>
