@@ -1,0 +1,59 @@
+RELATÓRIO
+
+1. Termo de compromisso
+
+Os membros do grupo afirmam que todo o código desenvolvido para este
+trabalho é de autoria própria.  Exceto pelo material listado no item 3
+deste relatório, os membros do grupo afirmam não ter copiado
+material da Internet nem obtiveram código de terceiros.
+
+2. Membros do grupo e alocação de esforço
+
+Vinicius Trindade Dias Abel <viniciustda@ufmg.br> 100%
+
+3. Referências bibliográficas
+
+http://en.wikipedia.org/wiki/Standard_streams
+https://linux.die.net/man/2/pipe
+https://linux.die.net/man/2/fork
+https://linux.die.net/man/2/close
+https://linux.die.net/man/3/exec
+https://github.com
+https://learn.microsoft.com/pt-br/cpp/c-language/?view=msvc-170
+https://www.vivaolinux.com.br/dica/Utilizando-as-chamadas-de-sistema-dup()-e-dup2()/
+https://www.ibm.com/docs/pt-br/aix/7.3?topic=e-exec-execl-execle-execlp-execv-execve-execvp-exect-fexecve-subroutine
+https://www.programacaoprogressiva.net/2014/09/Pipes-em-C-Comunicao-entre-Processos-IPC-Interprocess-Communication.html
+
+4. Estruturas de dados
+
+Estruturas de dados:
+
+struct execcmd: Representa um comando simples, contendo um array 
+de strings (argv) para armazenar o comando e seus argumentos.
+
+struct redircmd: Usada para comandos com redirecionamento de 
+entrada (<) e saída (>), contendo o comando que será executado 
+e informações sobre o arquivo que será redirecionado.
+
+struct pipecmd: Representa comandos que utilizam pipes (|), 
+ligando a saída de um comando à entrada de outro. Ela contém 
+dois ponteiros para estruturas de comandos, um para o comando 
+à esquerda e outro para o comando à direita do pipe.
+
+Algoritmos:
+
+Execução de comandos simples: Para a execução de comandos simples, 
+usei execvp(), que busca o comando no PATH e o executa, 
+substituindo o processo atual pelo novo processo. Em caso de erro, 
+exibe uma mensagem e o processo é encerrado.
+
+Redirecionamento de entrada/saída: Para redirecionamento, 
+utilizei as funções dup2() para associar o descritor de arquivo correto ao stdin ou stdout. 
+Então, o comando é executado com o redirecionamento adequado, 
+utilizando o arquivo especificado para entrada ou saída.
+
+Pipes: Para implementar comandos com pipes (|), 
+utilizei pipe() para criar um canal entre dois processos. 
+O processo à esquerda redireciona sua saída para o pipe, 
+e o processo à direita redireciona sua entrada para o pipe. 
+O processo pai aguarda ambos os processos filhos terminarem através de wait().
