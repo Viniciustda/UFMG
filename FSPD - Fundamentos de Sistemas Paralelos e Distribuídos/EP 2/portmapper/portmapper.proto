@@ -1,0 +1,87 @@
+// portmapper.proto
+
+// Define a versão da sintaxe do Protocol Buffers. 
+syntax = "proto3";
+
+// Define um namespace para este arquivo, evitando conflitos de nome com outros arquivos .proto.
+package portmapper;
+
+// -----------------------------------------------------------------------------
+// Definição do Serviço
+// -----------------------------------------------------------------------------
+
+// O serviço PortMapper é responsável por gerenciar registros de serviços em uma única máquina.
+// Ele associa um nome de serviço a um número de porto e outros metadados.
+service PortMapper {
+  // Registra um serviço, ou atualiza um existente, e retorna o porto alocado.
+  rpc RegisterService (RegisterRequest) returns (RegisterResponse);
+
+  // Remove o registro de um serviço com base no seu número de porto.
+  rpc UnregisterService (UnregisterRequest) returns (UnregisterResponse);
+
+  // Obtém as informações de um serviço (porto e valor) a partir do seu nome.
+  rpc GetServiceInfo (ServiceInfoRequest) returns (ServiceInfoResponse);
+
+  // Manda o servidor PortMapper encerrar sua execução.
+  rpc Terminate (TerminateRequest) returns (TerminateResponse);
+}
+
+// -----------------------------------------------------------------------------
+// Definições das Mensagens (Estruturas de Dados)
+// -----------------------------------------------------------------------------
+
+// Mensagens para o método RegisterService
+// -----------------------------------------
+
+// Requisição para registrar um serviço.
+message RegisterRequest {
+  string service_name = 1;  // O nome único que identifica o serviço.
+  double value = 2;         // Um valor genérico associado ao serviço.
+}
+
+// Resposta do registro de um serviço.
+message RegisterResponse {
+  int32 port = 1;           // O número do porto que foi alocado para o serviço.
+}
+
+
+// Mensagens para o método UnregisterService
+// -----------------------------------------
+
+// Requisição para remover o registro de um serviço.
+message UnregisterRequest {
+  int32 port = 1;           // O porto do serviço que deve ser removido.
+}
+
+// Resposta da remoção de um serviço.
+message UnregisterResponse {
+  int32 status = 1;         // Código de status da operação: 0 para sucesso, -1 para falha (ex: porto não encontrado).
+}
+
+
+// Mensagens para o método GetServiceInfo
+// -----------------------------------------
+
+// Requisição para consultar as informações de um serviço.
+message ServiceInfoRequest {
+  string service_name = 1;  // O nome do serviço a ser consultado.
+}
+
+// Resposta da consulta de um serviço.
+message ServiceInfoResponse {
+  int32 port = 1;           // O porto associado ao serviço. Será -1 se o serviço não for encontrado.
+  double value = 2;         // O valor associado ao serviço.
+}
+
+
+// Mensagens para o método Terminate
+// -----------------------------------------
+
+// Requisição para terminar o servidor.
+// Esta mensagem é vazia, pois a chamada não requer parâmetros.
+message TerminateRequest {}
+
+// Resposta da terminação do servidor.
+message TerminateResponse {  
+  int32 count = 1;          // O número de serviços que estavam registrados no momento do encerramento.
+}

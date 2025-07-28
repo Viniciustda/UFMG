@@ -1,0 +1,83 @@
+// registry.proto
+
+// Define a versão da sintaxe do Protocol Buffers.
+syntax = "proto3";
+
+// Define um namespace para este arquivo, evitando conflitos de nome.
+package registry;
+
+// -----------------------------------------------------------------------------
+// Definição do Serviço
+// -----------------------------------------------------------------------------
+
+// O serviço Registry atua como um diretório central para toda a rede.
+// Ele mapeia nomes de serviços para o localizador do Portmapper que gerencia aquele serviço.
+service Registry {
+  // Mapeia (ou atualiza) um nome de serviço para o endereço do Portmapper que o anunciou.
+  rpc Map (MapRequest) returns (MapResponse);
+
+  // Remove o mapeamento de um serviço.
+  rpc Unmap (UnmapRequest) returns (UnmapResponse);
+
+  // Consulta o Registry para descobrir em qual Portmapper (máquina) um serviço está registrado.
+  rpc Query (QueryRequest) returns (QueryResponse);
+
+  // Manda o servidor Registry encerrar sua execução.
+  rpc Finalize (FinalizeRequest) returns (FinalizeResponse);
+}
+
+// -----------------------------------------------------------------------------
+// Definições das Mensagens (Estruturas de Dados)
+// -----------------------------------------------------------------------------
+
+// Mensagens para o método Map
+// --------------------------------
+
+// Requisição para mapear um serviço.
+message MapRequest {
+  string service_name = 1;              // O nome único do serviço.
+  string portmapper_locator = 2;        // O localizador do Portmapper, no formato "host:porta".
+}
+
+// Resposta do mapeamento.
+message MapResponse {
+  int32 mapped_services_count = 1;      // O número total de serviços mapeados no Registry após esta operação.
+}
+
+// Mensagens para o método Unmap
+// --------------------------------
+
+// Requisição para remover o mapeamento de um serviço.
+message UnmapRequest {
+  string service_name = 1;              // O nome do serviço a ser removido do diretório central.
+}
+
+// Resposta da remoção do mapeamento.
+message UnmapResponse {
+  int32 status = 1;                     // Código de status: 0 para sucesso, -1 para falha (serviço não encontrado).
+}
+
+// Mensagens para o método Query
+// --------------------------------
+
+// Requisição para consultar a localização de um serviço.
+message QueryRequest {
+  string service_name = 1;              // O nome do serviço a ser consultado.
+}
+
+// Resposta da consulta.
+message QueryResponse {
+  string portmapper_locator = 1;        // O localizador do Portmapper que registrou o serviço. Será uma string vazia se o serviço não for encontrado no Registry.
+}
+
+// Mensagens para o método Finalize
+// ----------------------------------
+
+// Requisição para finalizar o servidor Registry.
+// É vazia pois a chamada não precisa de parâmetros.
+message FinalizeRequest {}
+
+// Resposta da finalização.
+message FinalizeResponse {  
+  int32 registered_services_count = 1;  // O número total de serviços que estavam mapeados no momento do encerramento.
+}
