@@ -1,0 +1,8 @@
+osmnx==2.0.2
+pandas==2.2.2
+imageio==2.37.0
+Pillow==11.2.1
+networkx==3.4.2
+matplotlib==3.8.2
+smolagents[litellm]==1.14.0
+gradio====5.29.0
