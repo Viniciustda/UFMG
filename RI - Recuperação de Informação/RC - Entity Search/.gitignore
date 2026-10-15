@@ -1,0 +1,24 @@
+# dados e artefatos pesados (não versionar)
+data/
+cache/
+models/
+*.zip
+*.jsonl
+
+# runs/ É versionado (CSVs de submissão, ~5MB) para o grupo acompanhar.
+# Apenas os pesados de runs ficam de fora:
+runs/*.npz
+runs/*.gz
+
+# ambiente
+venv/
+__pycache__/
+*.pyc
+
+# credenciais
+kaggle.json
+
+# relatório (LaTeX) — fica fora do GitHub
+doc/
+
+HLV/

@@ -1,0 +1,9 @@
+numpy
+orjson
+pandas
+tqdm
+PyStemmer
+lightgbm
+transformers
+sentence-transformers
+accelerate

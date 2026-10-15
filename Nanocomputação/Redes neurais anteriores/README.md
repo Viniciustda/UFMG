@@ -15,6 +15,6 @@ First neural network scripts written before the final project: data preparation,
 
 ## Notes
 
-- The final version of this work is the Plasmônica project, which is private for now.
+- The final version of this work is in [Projeto - Plasmônica](../Projeto%20-%20Plasm%C3%B4nica).
 
 Comments in the code and reports are in Portuguese unless noted otherwise.
