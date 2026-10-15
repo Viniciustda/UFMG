@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main(int argc, char const *argv[]) {
+
+    int pd = 0;   //pd = ponto desejado
+    int pa = 0;   //pa = ponto atual (ponto quadrado perfeito anterior ao ponto desejado)
+
+    int cx = 0;     //cx = coordenada x
+    int cy = 0;     //cy = coordenada y
+
+    int dt = 0;     //dt = distancia total (distancia do pa ao pd)
+    int dh = 0;     //dh = distancia horizontal (dentro da dt, a dh do pa ao pd)
+    int dv = 0;     //dv = distancia vertical  (dentro da dt, a dv do pa ao pd)
+
+    float raiz_pd = 0.0;    //raiz_pd = raiz do ponto desejado
+
+    printf("\n Digite um ponto da espiral quadrada e descubra suas coordenadas: ");
+    scanf("%d", &pd);
+    printf("\n Ponto escolhido: %d", pd);
+
+    raiz_pd = sqrt(pd);
+
+    pa = pow((int)raiz_pd, 2);
+
+    dt = pd - pa;
+    if (dt > (int)raiz_pd) {                        //dh pode ser no maximo (int)raiz_pd, entao se dt > (int)raiz_pd, dv > 0
+        dv = dt - (int)raiz_pd;
+        dh = dt - dv;
+    } 
+    else {                                          //dh pode ser no maximo (int)raiz_pd, entao se dt <= (int)raiz_pd, dv = 0
+        dh =  dt;
+    }
+    
+    if ((int)raiz_pd % 2 == 0) {                    //verifica se o numero eh par, se sim, o ponto desejado esta na parte inferior da diagonal formada pelos quadrados perfeitos
+        cx = -((int)raiz_pd/2);
+        cy = cx;
+
+        cx += dh;
+        cy += dv;
+    }
+
+    else {                                                           //se o numero eh impar, o ponto desejado esta na parte superior da diagonal formada pelos quadrados perfeitos
+        cx = ((int)raiz_pd-1)/2;
+        cy = cx + 1;
+
+        cx -= dh;
+        cy -= dv;
+    }
+
+    printf("\n Coordenadas: ( %d , %d )\n", cx, cy);
+
+    return 0;
+}

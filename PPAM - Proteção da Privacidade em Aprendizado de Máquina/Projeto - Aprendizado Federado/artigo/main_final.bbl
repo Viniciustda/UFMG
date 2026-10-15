@@ -1,0 +1,77 @@
+\begin{thebibliography}{}
+
+\bibitem[Abadi et~al. 2016]{abadi2016deep}
+Abadi, M., Chu, A., Goodfellow, I., McMahan, H.~B., Mironov, I., Talwar, K.,
+  and Zhang, L. (2016).
+\newblock Deep learning with differential privacy.
+\newblock In {\em Proceedings of the 2016 ACM SIGSAC Conference on Computer and
+  Communications Security (CCS)}, pages 308--318. ACM.
+
+\bibitem[Balle and Wang 2018]{balle2018analytic}
+Balle, B. and Wang, Y.-X. (2018).
+\newblock Improving the {G}aussian mechanism for differential privacy:
+  Analytical calibration and optimal denoising.
+\newblock In {\em Proceedings of the 35th International Conference on Machine
+  Learning (ICML)}, volume~80 of {\em PMLR}, pages 394--403.
+
+\bibitem[Beutel et~al. 2020]{beutel2020flower}
+Beutel, D.~J., Topal, T., Mathur, A., Qiu, X., Fernandez-Marques, J., Gao, Y.,
+  Sani, L., Li, K.~H., Parcollet, T., de~Gusm\~{a}o, P. P.~B., and Lane, N.~D.
+  (2020).
+\newblock Flower: A friendly federated learning research framework.
+\newblock {\em arXiv preprint arXiv:2007.14390}.
+
+\bibitem[Carlini et~al. 2022]{carlini2022membership}
+Carlini, N., Chien, S., Nasr, M., Song, S., Terzis, A., and Tram\`{e}r, F.
+  (2022).
+\newblock Membership inference attacks from first principles.
+\newblock In {\em 2022 IEEE Symposium on Security and Privacy (SP)}, pages
+  1897--1914. IEEE.
+
+\bibitem[Dwork and Roth 2014]{dwork2014foundations}
+Dwork, C. and Roth, A. (2014).
+\newblock The algorithmic foundations of differential privacy.
+\newblock {\em Foundations and Trends in Theoretical Computer Science},
+  9(3--4):211--407.
+
+\bibitem[Matzka 2020]{matzka2020explainable}
+Matzka, S. (2020).
+\newblock Explainable artificial intelligence for predictive maintenance
+  applications.
+\newblock In {\em 2020 Third International Conference on Artificial
+  Intelligence for Industries (AI4I)}, pages 69--74. IEEE.
+
+\bibitem[McMahan et~al. 2017]{mcmahan2017fedavg}
+McMahan, B., Moore, E., Ramage, D., Hampson, S., and Arcas, B. A.~y. (2017).
+\newblock Communication-efficient learning of deep networks from decentralized
+  data.
+\newblock In {\em Proceedings of the 20th International Conference on
+  Artificial Intelligence and Statistics (AISTATS)}, volume~54 of {\em PMLR},
+  pages 1273--1282.
+
+\bibitem[McMahan et~al. 2018]{mcmahan2018learning}
+McMahan, H.~B., Ramage, D., Talwar, K., and Zhang, L. (2018).
+\newblock Learning differentially private recurrent language models.
+\newblock In {\em International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Mironov 2017]{mironov2017renyi}
+Mironov, I. (2017).
+\newblock R\'{e}nyi differential privacy.
+\newblock In {\em 2017 IEEE 30th Computer Security Foundations Symposium
+  (CSF)}, pages 263--275. IEEE.
+
+\bibitem[Pedregosa et~al. 2011]{pedregosa2011scikit}
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel,
+  O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J.,
+  Passos, A., Cournapeau, D., Brucher, M., Perrot, M., and Duchesnay, E.
+  (2011).
+\newblock Scikit-learn: Machine learning in {P}ython.
+\newblock {\em Journal of Machine Learning Research}, 12:2825--2830.
+
+\bibitem[Shokri et~al. 2017]{shokri2017membership}
+Shokri, R., Stronati, M., Song, C., and Shmatikov, V. (2017).
+\newblock Membership inference attacks against machine learning models.
+\newblock In {\em 2017 IEEE Symposium on Security and Privacy (SP)}, pages
+  3--18. IEEE.
+
+\end{thebibliography}

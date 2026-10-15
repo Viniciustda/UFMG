@@ -1,0 +1,41 @@
+apiVersion: v1
+data:
+  pyfile: "import json\n\ndef handler(input_data: dict, context: object) -> dict:\n
+    \   \"\"\"\n    Função serverless para calcular métricas de uso de recursos.\n
+    \   \"\"\"\n    \n    # --- Calcula % de Tráfego de Saída (Egress) ---\n    #
+    Fórmula: bytes_sent / (bytes_sent + bytes_recv)\n    \n    bytes_sent = input_data.get('net_io_counters_eth0-bytes_sent1',
+    0)\n    bytes_recv = input_data.get('net_io_counters_eth0-bytes_recv1', 0)\n    total_traffic
+    = bytes_sent + bytes_recv\n    \n    if total_traffic > 0:\n        percent_network_egress
+    = bytes_sent / total_traffic\n    else:\n        percent_network_egress = 0.0\n\n
+    \   # --- Calcula % de Memória em Cache ---\n    # Fórmula: (buffers + cached)
+    / total\n    \n    mem_total = input_data.get('virtual_memory-total', 1) # Evita
+    divisão por zero\n    mem_buffers = input_data.get('virtual_memory-buffers', 0)\n
+    \   mem_cached = input_data.get('virtual_memory-cached', 0)\n    \n    percent_memory_caching
+    = (mem_buffers + mem_cached) / mem_total\n\n    # --- Calcula Média Móvel da CPU
+    (últimos 60s) ---\n    # Dados chegam a cada 5s. Para 60s, precisa de uma janela
+    de 12 amostras.\n    # Usa context.env para persistir essa lista entre chamadas.\n
+    \   \n    # Inicializa a estrutura no env se não existir\n    if \"cpu_history\"
+    not in context.env:\n        context.env[\"cpu_history\"] = {}\n\n    cpu_avgs
+    = {}\n    \n    # Identifica quantas CPUs existem baseadas nas chaves de entrada\n
+    \   # O input tem chaves como 'cpu_percent-0', 'cpu_percent-1', etc.\n    for
+    key, value in input_data.items():\n        if key.startswith(\"cpu_percent-\"):\n
+    \           cpu_id = key.split(\"-\")[1] # Pega o número da CPU (ex: '0')\n            \n
+    \           # Recupera o histórico dessa CPU específica\n            history =
+    context.env[\"cpu_history\"].get(cpu_id, [])\n            \n            # Adiciona
+    o valor atual\n            history.append(value)\n            \n            #
+    Mantém apenas os últimos 12 valores (60 segundos / 5 segundos = 12)\n            if
+    len(history) > 12:\n                history.pop(0)\n            \n            #
+    Salva de volta no env para a próxima execução\n            context.env[\"cpu_history\"][cpu_id]
+    = history\n            \n            # Calcula a média atual\n            avg_val
+    = sum(history) / len(history)\n            cpu_avgs[f\"avg-util-cpu{cpu_id}-60sec\"]
+    = avg_val\n\n    # --- Monta o JSON de Resposta ---\n    output = {\n        \"percent-network-egress\":
+    percent_network_egress,\n        \"percent-memory-caching\": percent_memory_caching\n
+    \   }\n    \n    # Adiciona as médias das CPUs ao output\n    output.update(cpu_avgs)\n
+    \   \n    return output"
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-12-06T14:58:45Z"
+  name: pyfile
+  namespace: viniciusabel
+  resourceVersion: "29606356"
+  uid: 1fa6380f-4545-46eb-b8d3-6dd804c58aab

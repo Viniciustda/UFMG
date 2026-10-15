@@ -1,0 +1,12 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Instala bibliotecas necessárias
+RUN pip install redis psutil pandas numpy requests matplotlib
+
+# Copia o runtime
+COPY runtime.py .
+
+# Define o comando de entrada
+CMD ["python", "runtime.py"]
