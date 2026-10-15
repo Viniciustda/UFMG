@@ -1,5 +1,7 @@
 # Contra-Diction
 
+> **Download and play:** this folder has only the source code, shaders and screenshots. The full game, with all art assets (about 140 MB), is in the original repository: [Viniciustda/Contra-Diction](https://github.com/Viniciustda/Contra-Diction).
+
 ## Gameplay
 ```Clique na imagem para assistir```
 
